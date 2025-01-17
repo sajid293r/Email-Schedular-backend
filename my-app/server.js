@@ -156,8 +156,8 @@ const port = 5000;
 // Set up Nodemailer transporter using SMTP
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST, // Replace with your SMTP host
-    port: 587, // Use the appropriate port (587 for TLS)
-    secure: false, // Set to true if using SSL
+    port: 465, // Use the appropriate port (587 for TLS)
+    secure: true, // Set to true if using SSL
     auth: {
         user: process.env.SMTP_USER, // Your SMTP username
         pass: process.env.SMTP_PASS  // Your SMTP password
