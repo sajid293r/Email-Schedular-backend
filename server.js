@@ -3,15 +3,23 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const sgMail = require('@sendgrid/mail');
+const nodemailer = require('nodemailer');
 const cors = require('cors');
-const { v4: uuidv4 } = require('uuid'); // Import UUID for unique identifiers
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const port = 5000;
 
-// Use environment variables for API keys
-sgMail.setApiKey(process.env.SEND_GRID_KEY);
+// Set up Nodemailer transporter using SMTP
+const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST, // Replace with your SMTP host
+    port: process.env.SMTP_PORT, // Use the appropriate port (587 for TLS)
+    secure: false, // Set to true if using SSL
+    auth: {
+        user: process.env.SMTP_USER, // Your SMTP username
+        pass: process.env.SMTP_PASS  // Your SMTP password
+    }
+});
 
 mongoose.connect('mongodb://localhost:27017/emailScheduler', {
     useNewUrlParser: true,
@@ -30,40 +38,42 @@ const EmailSchema = new mongoose.Schema({
 });
 
 const Email = mongoose.model('Email', EmailSchema);
-app.get("/",(req,res)=>{
-    res.send("Server is Running")
-})
+
+app.get("/", (req, res) => {
+    res.send("Server is Running");
+});
 app.post('/scheduleEmail', async (req, res) => {
+    console.log(req.body)
     const { from, to, subject, text, sendAt, gap } = req.body;
-    const uniqueId = uuidv4(); // Generate a unique identifier
-    const email = new Email({ from, to, subject: `${subject}`, text, sendAt });
+    const uniqueId = uuidv4();
+    const email = new Email({ from, to, subject, text, sendAt });
 
     await email.save();
 
     const sendEmail = async (recipient, delay) => {
         const message = {
-            to: recipient,
             from,
-            subject: `${subject} `,
+            to: recipient,
+            subject,
             text
         };
 
         setTimeout(async () => {
             try {
-                await sgMail.send(message);
+                await transporter.sendMail(message);
                 console.log('Email sent to', recipient);
             } catch (error) {
-                console.error('Error sending email to', recipient, ':', error.response.body.errors);
+                console.error('Error sending email to', recipient, ':', error.message);
             }
         }, delay);
     };
 
-    const recipients = Array.isArray(to) ? to.map(email => email.trim()) : [to.trim()]; // Handle both array and single string
-    let delay = 0; // Initial delay in milliseconds
+    const recipients = Array.isArray(to) ? to.map(email => email.trim()) : [to.trim()];
+    let delay = 0;
 
     for (const recipient of recipients) {
         sendEmail(recipient, delay);
-        delay += gap * 60000; // Add gap duration between emails
+        delay += gap * 60000;
     }
 
     res.send('Email scheduled successfully');
