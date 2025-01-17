@@ -30,7 +30,9 @@ const EmailSchema = new mongoose.Schema({
 });
 
 const Email = mongoose.model('Email', EmailSchema);
-
+app.get("/",(req,res)=>{
+    res.send("Server is Running")
+})
 app.post('/scheduleEmail', async (req, res) => {
     const { from, to, subject, text, sendAt, gap } = req.body;
     const uniqueId = uuidv4(); // Generate a unique identifier
@@ -68,5 +70,5 @@ app.post('/scheduleEmail', async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Server is running on port http://localhost:${port}`);
 });
