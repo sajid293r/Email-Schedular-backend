@@ -11,7 +11,7 @@ const app = express();
 const port = 5000;
 
 // Use environment variables for API keys
-sgMail.setApiKey(process.env.SEND_GRID_KEY);
+sgMail.setApiKey();
 
 mongoose.connect('mongodb://localhost:27017/emailScheduler', {
     useNewUrlParser: true,
