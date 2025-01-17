@@ -3,7 +3,6 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const sgMail = require('@sendgrid/mail');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid'); // Import UUID for unique identifiers
 
@@ -11,7 +10,6 @@ const app = express();
 const port = 5000;
 
 // Use environment variables for API keys
-sgMail.setApiKey();
 
 mongoose.connect('mongodb://localhost:27017/emailScheduler', {
     useNewUrlParser: true,
