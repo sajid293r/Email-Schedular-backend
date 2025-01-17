@@ -141,7 +141,7 @@ app.listen(port, () => {
 });
  */
 
-
+/* 
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -224,4 +224,20 @@ app.post('/scheduleEmail', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
+}); */
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Hello, World!');
 });
+
+app.get('/scheduleEmail', (req, res) => {
+  res.send('Email scheduling endpoint');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
