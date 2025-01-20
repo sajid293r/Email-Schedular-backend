@@ -141,7 +141,7 @@ app.listen(port, () => {
 });
  */
 
-/* 
+
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -153,14 +153,13 @@ const { v4: uuidv4 } = require('uuid');
 const app = express();
 const port = 5000;
 
-// Set up Nodemailer transporter using SMTP
 const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST, // Replace with your SMTP host
-    port: 465, // Use the appropriate port (587 for TLS)
-    secure: true, // Set to true if using SSL
+    host: process.env.SMTP_HOST, 
+    port: 587,
+    secure: false, 
     auth: {
-        user: process.env.SMTP_USER, // Your SMTP username
-        pass: process.env.SMTP_PASS  // Your SMTP password
+        user: process.env.SMTP_USER, 
+        pass: process.env.SMTP_PASS  
     }
 });
 
@@ -174,7 +173,7 @@ app.use(cors());
 
 const EmailSchema = new mongoose.Schema({
     from: String,
-    to: [String], // Support multiple recipients
+    to: [String], 
     subject: String,
     text: String,
     sendAt: Date
@@ -224,20 +223,4 @@ app.post('/scheduleEmail', async (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port http://localhost:${port}`);
-}); */
-const express = require('express');
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.get('/', (req, res) => {
-  res.send('Hello, World!');
 });
-
-app.get('/scheduleEmail', (req, res) => {
-  res.send('Email scheduling endpoint');
-});
-
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
-
