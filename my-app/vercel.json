@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "name":"e-shop-tutorial",
+    "name": "mern-email-scheduler",
     "builds":[
         {"src":"server.js","use":"@vercel/node"}
     ],
